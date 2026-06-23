@@ -5,7 +5,6 @@ import multiprocessing as multicore
 #Para ver la imagen se usa:
 #cv.imshow('gris',bordes)
 #cv.waitKey(0)
-#Para verificar que si detecta contornos - cv.drawContours(imagen, cnts, -1, (255,0,0), 3)
 
 def obtenerContorno(imagen,bordes):
     #Encotrar los contornos de las figuras
@@ -15,9 +14,9 @@ def obtenerContorno(imagen,bordes):
     for c in cnts:
         #Ignorar Ruido ***
         area = cv.contourArea(c)
-        if area < 1000 or area > imagen.shape[0] * imagen.shape[1] * 0.8:
+        if area < 500 or area > imagen.shape[0] * imagen.shape[1] * 0.8:
             continue
-        epsilon = 0.02*cv.arcLength(c,True)
+        epsilon = 0.04*cv.arcLength(c,True)
         approx = cv.approxPolyDP(c,epsilon,True)
         x,y,w,h = cv.boundingRect(approx)
         lados = len(approx)
@@ -41,11 +40,12 @@ def obtenerContorno(imagen,bordes):
 def procesarImagen(imagen):
     imagen_gris = cv.cvtColor(imagen, cv.COLOR_BGR2GRAY)
     #Imagen Grises config 
-    imagenBlur = cv.GaussianBlur(imagen_gris,(7,7),1)
-    imagenCanny = cv.Canny(imagenBlur, 50, 200)
-    imagenDilate = cv.dilate(imagenCanny, None, iterations=1)
+    imagenBlur = cv.GaussianBlur(imagen_gris, (5,5), 0)
+    imagenCanny = cv.Canny(imagenBlur, 80, 180)
+    imagenDilate = cv.dilate(imagenCanny, None, iterations=2)
     imagenErode = cv.erode(imagenDilate, None, iterations=1)
     imagenProcesada = imagenErode
+    #cv.imshow('ImagenProcesada', imagenProcesada)
     return imagenProcesada
 
 #imagen = cv.imread('Imagenes/figurasColores.png')

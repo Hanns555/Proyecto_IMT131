@@ -10,8 +10,8 @@ class CamaraJugador:
         while self.captura.isOpened():
             ret, imagen = self.captura.read()
             if ret:
-                bordes = procesarImagen(imagen)
-                imagen = obtenerContorno(imagen, bordes)
+                imagen = cv.flip(imagen, 1)
+                
                 cv.imshow('Jugador', imagen)
                 if cv.waitKey(1) & 0xFF == ord('s'):
                     break
